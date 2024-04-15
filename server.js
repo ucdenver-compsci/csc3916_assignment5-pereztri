@@ -140,6 +140,14 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res)
                 foreignField: "movieId", // field in the items collection
                 as: "MOVIE REVIEWS" // output array where the joined items will be placed
                 }
+            },
+            {
+                $addFields: {
+                    avgRating: { $avg: "$movieReviews.rating" }
+                }                
+            },
+            {
+                $sort : { avgRating : -1} 
             }
         ]).exec(function(err, movies) 
         {
@@ -187,6 +195,11 @@ router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
                 foreignField: "movieId", // field in the items collection
                 as: "MOVIE REVIEWS" // output array where the joined items will be placed
                 }
+            },
+            {
+                $addFields: {
+                    avgRating: { $avg: "$movieReviews.rating" }
+                  }
             }
         ]).exec(function(err, result) 
         {
