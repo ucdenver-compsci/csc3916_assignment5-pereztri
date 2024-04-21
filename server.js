@@ -211,10 +211,19 @@ router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
                 console.error("Error during the aggregation: ", err);
                 return res.status(500).send({success: false, message: 'Internal server error occurred.'});
                 // res.send(err);
-            } else 
+            } 
+            else 
             {
+                //The aggregate returns and array so update it to return just the first index (e.g. res.json(result[0])
+                if (result.length > 0)
+                {
+                    res.json(result[0]);
+                }
+                else 
+                {
+                    res.status(404).send({success: false, message: 'The movie record was not found.'});
+                }
                 // console.log(result);
-                res.json(result);
             }
         });
     }
