@@ -4,6 +4,7 @@ File: Server.js
 Description: Web API scaffolding for Movie API
  */
 
+var mongoose = require('mongoose');
 var express = require('express');
 var bodyParser = require('body-parser');
 var passport = require('passport');
@@ -90,9 +91,9 @@ router.post('/signin', function (req, res) {
 //POST route for movies
 router.post('/movies', authJwtController.isAuthenticated, function(req, res)
 {
-    if (!req.body.title || !req.body.releaseDate || !req.body.genre || !req.body.actors || req.body.actors.length === 0)
+    if (!req.body.title || !req.body.releaseDate || !req.body.genre || !req.body.actors || req.body.actors.length === 0 || !req.body.imageUrl)
     {
-        res.status(400).send({success: false, message: 'Error: The movie does not contain the required information. It is missing a title, release date, genre, actors, or character name.'});
+        res.status(400).send({success: false, message: 'Error: The movie does not contain the required information. It is missing a title, release date, genre, actors, character name, or image URL.'});
     } 
     else 
     {
@@ -128,6 +129,7 @@ router.post('/movies', authJwtController.isAuthenticated, function(req, res)
 // });
 
 //GET route for all movies
+//Your GET /movies endpoint should sort the results by average rating (server-side)
 router.get('/movies', authJwtController.isAuthenticated, function(req, res)
 {
     if (req.query.reviews === 'true')
@@ -138,7 +140,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res)
                 from: "reviews", // name of the foreign collection
                 localField: "_id", // field in the orders collection
                 foreignField: "movieId", // field in the items collection
-                as: "MOVIE REVIEWS" // output array where the joined items will be placed
+                as: "movieReviews" // output array where the joined items will be placed
                 }
             },
             {
@@ -193,7 +195,7 @@ router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
                 from: "reviews", // name of the foreign collection
                 localField: "_id", // field in the orders collection
                 foreignField: "movieId", // field in the items collection
-                as: "MOVIE REVIEWS" // output array where the joined items will be placed
+                as: "movieReviews" // output array where the joined items will be placed
                 }
             },
             {
@@ -206,7 +208,9 @@ router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
             if (err) 
             {
                 // handle error
-                res.send(err);
+                console.error("Error during the aggregation: ", err);
+                return res.status(500).send({success: false, message: 'Internal server error occurred.'});
+                // res.send(err);
             } else 
             {
                 // console.log(result);
@@ -341,9 +345,11 @@ router.delete('/movies', authJwtController.isAuthenticated, function(req, res)
 //POST route for reviews
 router.post('/reviews', authJwtController.isAuthenticated, function(req, res)
 {
-    if (!req.body.movieId || !req.body.username || req.body.review == null || req.body.rating == null)
+    // if (!req.body.movieId || !req.body.username || req.body.review == null || req.body.rating == null)
+    if (!req.body.movieId || req.body.review == null || req.body.rating == null)
     {
-        res.status(400).send({success: false, message: 'Error: The review does not contain the required information. It is missing a movie ID, user name, review, and rating.'});
+        // res.status(400).send({success: false, message: 'Error: The review does not contain the required information. It is missing a movie ID, user name, review, and rating.'});
+        res.status(400).send({success: false, message: 'Error: The review does not contain the required information. It is missing a movie ID, review, and rating.'});
     } 
     else 
     {

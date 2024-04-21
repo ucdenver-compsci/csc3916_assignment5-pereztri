@@ -9,6 +9,7 @@ mongoose.connect(process.env.DB);
 // });
 
 
+//From HW 4:
 //Movie Collection Schema to store movie information:
 // const MovieSchema = new mongoose.Schema({
 //     title: { type: String, required: true, index: true },
@@ -44,7 +45,7 @@ const MovieSchema = new mongoose.Schema({
   });
 
 
-//Movie Collection Schema to store movie information:
+//From the assigment page:
   // const MovieSchema = new mongoose.Schema({
   //   title: { type: String, required: true, index: true },
   //   releaseDate: { type: Number, min: [1900, 'Must be greater than 1899'], max: [2100, 'Must be less than 2100']},
