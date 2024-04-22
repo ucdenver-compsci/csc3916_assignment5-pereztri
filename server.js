@@ -184,6 +184,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res)
 router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
 {
     const movieId = req.params.id;
+
     if (req.query.reviews === 'true')
     {
         Movie.aggregate([
@@ -214,16 +215,9 @@ router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
             } 
             else 
             {
-                //The aggregate returns and array so update it to return just the first index (e.g. res.json(result[0])
-                if (result.length > 0)
-                {
-                    res.json(result[0]);
-                }
-                else 
-                {
-                    res.status(404).send({success: false, message: 'The movie record was not found.'});
-                }
                 // console.log(result);
+                // res.json(result);
+                res.json(result[0] || {success: false, message: 'The movie record was not found.'});
             }
         });
     }
