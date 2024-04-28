@@ -356,15 +356,15 @@ router.post('/reviews', authJwtController.isAuthenticated, function(req, res)
     } 
     else 
     {
-        var review = new Review(req.body);
-        // var review = new Review(
-        //     {
-        //         movieId: req.body.movieId, 
-        //         username: req.body.username, 
-        //         review: req.body.review,
-        //         rating: req.body.rating
-        //     }
-        // );
+        // var review = new Review(req.body);
+        var review = new Review(
+            {
+                movieId: req.body.movieId, 
+                username: req.body.username, 
+                review: req.body.review,
+                rating: req.body.rating
+            }
+        );
         review.save(function(err)
         {
             if (err)
